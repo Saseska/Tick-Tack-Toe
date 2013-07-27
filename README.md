@@ -1,4 +1,4 @@
 Tick-Tack-Toe
 =============
 
-Project of game tick-tack-toe on java
+Project of game tick-tack-toe on java. Hexlet.org
