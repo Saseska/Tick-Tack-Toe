@@ -1,14 +1,31 @@
-/**
- * Created with IntelliJ IDEA.
- * User: skilrex
- * Date: 25.07.13
- * Time: 11:41
- * To change this template use File | Settings | File Templates.
- */
-public class Player {
-    private String symbol;
+import java.util.Scanner;
 
-    public Player(String s){
-        symbol = s;
+public class Player {
+    private char symbol;
+    private Scanner scanner = new Scanner(System.in);
+    private int x,y;
+
+    public Player(char c){
+        symbol = c;
     }
+
+    public char getSymbol(){
+        return symbol;
+    }
+
+    public void step(){
+        System.out.println("Ход игрока " + symbol + ": ");
+        System.out.print("x- ");
+        x =  scanner.nextInt();
+        System.out.print("y- ");
+        y = scanner.nextInt();
+        GameField.checkPoint(this);
+    }
+    public int getX(){
+        return x;
+    }
+    public int getY(){
+        return y;
+    }
+
 }
