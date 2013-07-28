@@ -5,8 +5,6 @@ public class Main {
     public static void main(String[] args) {
         int steps;
 
-
-
         //Scanner scanner = new Scanner(System.in);
         Player playerO = new Player('O');
         Player playerX = new Player('X');
@@ -20,7 +18,7 @@ public class Main {
             work = true;
             gameField.viewPlane();
             while (work){
-                playerX.step();
+                playerX.step(gameField);
             }
             steps++;
             gameField.checkWin(playerX);
@@ -31,13 +29,17 @@ public class Main {
             gameField.viewPlane();
             work = true;
             while (work){
-                playerO.step();
+                playerO.step(gameField);
             }
             steps++;
             gameField.checkWin(playerO);
 
             if(win) break;
         }
+
+        if(!win && (steps == gameField.getMaxSteps())) System.out.println("Ничья");
+
+        gameField.viewPlane();
 
     }
 

@@ -13,21 +13,23 @@ public class Player {
         return symbol;
     }
 
-    public void step(){
-        System.out.println("Ход игрока " + symbol + ": ");
-        System.out.print("x- ");
-        x =  scanner.nextInt();
-        System.out.print("y- ");
-        y = scanner.nextInt();
-        GameField.checkPoint(this);
-
-    }
-
     public int getX(){
         return x;
     }
+
     public int getY(){
         return y;
+    }
+
+    public void step(GameField field){
+        System.out.println("Ход игрока " + symbol + ": ");
+        System.out.print("y- ");
+        // - 1 т.к. нумерация в массиве начинается не с 1, а с 0.
+        y = scanner.nextInt() - 1;
+        System.out.print("x- ");
+        x =  scanner.nextInt() - 1 ;
+        field.checkPoint(this);
+
     }
 
 }
