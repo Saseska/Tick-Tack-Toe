@@ -1,17 +1,23 @@
-public class Main {
+package game;
+
+import players.Player;
+
+import java.util.Scanner;
+
+public class PlayerVsPlayer {
     static boolean work;
     static boolean win;
-
-    public static void main(String[] args) {
+    public static void game(){
         int steps;
+        Scanner scanner = new Scanner(System.in);
 
-        //Scanner scanner = new Scanner(System.in);
         Player playerO = new Player('O');
         Player playerX = new Player('X');
-        GameField gameField = new GameField();
+
+        System.out.println("Введите размер игрового поля: ");
+        GameField gameField = new GameField(scanner.nextInt());
         gameField.eraseField();
 
-        System.out.println("Игра крестики-нолики");
         win = false;
 
         for(steps = 0; steps < gameField.getMaxSteps(); ){
@@ -21,7 +27,6 @@ public class Main {
                 playerX.step(gameField);
             }
             steps++;
-            gameField.checkWin(playerX);
 
             if(steps == gameField.getMaxSteps()) break;
             if(win) break;
@@ -32,7 +37,6 @@ public class Main {
                 playerO.step(gameField);
             }
             steps++;
-            gameField.checkWin(playerO);
 
             if(win) break;
         }
@@ -40,8 +44,5 @@ public class Main {
         if(!win && (steps == gameField.getMaxSteps())) System.out.println("Ничья");
 
         gameField.viewPlane();
-
     }
-
-
 }
