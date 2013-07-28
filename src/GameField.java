@@ -1,7 +1,7 @@
 public class GameField {
 
     private final static int FIELD_SIZE = 3;
-    private final static int SYMB_TO_WIN = FIELD_SIZE;
+    private final static int NUM_TO_WIN = FIELD_SIZE;
     private final static char DEFAULT_SYMBOL = ' ';
 
     private static char[][] field = new char[FIELD_SIZE][FIELD_SIZE];
@@ -61,7 +61,7 @@ public class GameField {
             for(int col = 0; col < field[row].length; col++){
                 if(field[row][col] == player.getSymbol()) numSymb++;
             }
-            if (numSymb == SYMB_TO_WIN) return true;
+            if (numSymb == NUM_TO_WIN) return true;
         }
         return false;
     }
@@ -73,30 +73,33 @@ public class GameField {
             for(int row = 0; row < field.length; row++){
                 if(field[row][col] == player.getSymbol()) numSymb++;
             }
-            if (numSymb == SYMB_TO_WIN) return true;
+            if (numSymb == NUM_TO_WIN) return true;
         }
         return false;
     }
 
     private boolean checkWinDiagonal(Player player){
-        int numSymbD = 0;
+        int numSymb = 0;
         for(int row = 0; row < field.length; row++){
             for(int col = 0; col < field[row].length; col++){
-                if((row==col) & (field[row][col] == player.getSymbol())) numSymbD++;
+                if((row==col) & (field[row][col] == player.getSymbol())) numSymb++;
             }
-            if (numSymbD == SYMB_TO_WIN) return true;
+            if (numSymb == NUM_TO_WIN) return true;
         }
 
-        numSymbD = 0;
+        numSymb = 0;
         for(int row = field.length - 1; row >= 0; row--){
 
             for(int col = 0; col < field[row].length; col++){
-                if(field[row][col] == player.getSymbol()) numSymbD++;
+                if(field[row][col] == player.getSymbol()){
+                    numSymb++;
+                    break;
+                }
             }
-            if (numSymbD == SYMB_TO_WIN) return true;
+            if (numSymb == NUM_TO_WIN) return true;
         }
 
         return false;
-    }
+        }
 
 }
