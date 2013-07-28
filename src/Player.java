@@ -20,7 +20,9 @@ public class Player {
         System.out.print("y- ");
         y = scanner.nextInt();
         GameField.checkPoint(this);
+
     }
+
     public int getX(){
         return x;
     }

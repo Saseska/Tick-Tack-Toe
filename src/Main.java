@@ -1,5 +1,6 @@
 public class Main {
     static boolean work;
+    static boolean win;
 
     public static void main(String[] args) {
         int steps;
@@ -13,6 +14,7 @@ public class Main {
         gameField.eraseField();
 
         System.out.println("Игра крестики-нолики");
+        win = false;
 
         for(steps = 0; steps < gameField.getMaxSteps(); ){
             work = true;
@@ -21,13 +23,20 @@ public class Main {
                 playerX.step();
             }
             steps++;
-            if(steps == gameField.getMaxSteps() )break;
+            gameField.checkWin(playerX);
+
+            if(steps == gameField.getMaxSteps()) break;
+            if(win) break;
+
             gameField.viewPlane();
             work = true;
             while (work){
                 playerO.step();
             }
             steps++;
+            gameField.checkWin(playerO);
+
+            if(win) break;
         }
 
     }
