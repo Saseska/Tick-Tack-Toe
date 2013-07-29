@@ -1,11 +1,53 @@
 package game;
 
-import common.Main;
+import common.GameField;
+import players.Computer;
+import players.Human;
 
-public class PlayerVsComputer {
+import java.util.Scanner;
+
+public class PlayerVsComputer extends Game{
+
     public static void game(){
-        System.out.println("Этот режим пока не доступен");
-        System.out.println();
-        Main.newGame();
+        int steps;
+        Scanner scanner = new Scanner(System.in);
+
+        Human playerX = new Human('X');
+        Computer playerO = new Computer('O');
+
+        System.out.println("Введите размер игрового поля: ");
+        GameField gameField = new GameField(scanner.nextInt());
+        gameField.eraseField();
+        System.out.println("Поле создано и очищено!");
+
+        setWin(false);
+
+        for(steps = 0; steps < gameField.getMaxSteps(); ){
+            setWork(true);
+            gameField.viewPlane();
+            System.out.println("Ход игрока " + playerX.getSymbol() + ": ");
+            while (getWork()){
+                playerX.step(gameField);
+            }
+            System.out.println("Игрок 1: ход выполнен");
+            steps++;
+
+            if(steps == gameField.getMaxSteps()) break;
+            if(getWin()) break;
+
+            gameField.viewPlane();
+            setWork(true);
+            System.out.println("Ход игрока " + playerO.getSymbol() + ": ");
+            while (getWork()){
+                playerO.step(gameField);
+            }
+            steps++;
+
+            if(getWin()) break;
+        }
+
+        if(!getWin() && (steps == gameField.getMaxSteps())) System.out.println("Ничья");
+
+        gameField.viewPlane();
     }
 }

@@ -1,5 +1,6 @@
-package game;
+package common;
 
+import game.Game;
 import players.Player;
 
 public class GameField {
@@ -16,7 +17,9 @@ public class GameField {
         if (size > 1) {
             fieldSize = size;
             field = new char[fieldSize][fieldSize];
-        } else PlayerVsPlayer.game();
+        } else {
+            Main.newGame();
+        }
     }
 
     public int getFieldLength(){
@@ -26,8 +29,6 @@ public class GameField {
     public int getMaxSteps(){
         return maxSteps;
     }
-
-
 
     public void eraseField(){
         for(int k = 0; k < field.length; k++){
@@ -55,16 +56,17 @@ public class GameField {
     }
 
     public void setPoint(Player player){
-        if(field[player.getY()][player.getX()] == DEFAULT_SYMBOL) {
-            field[player.getY()][player.getX()] = player.getSymbol();
-            PlayerVsPlayer.work = false;
+        if(field[player.getY()-1][player.getX()-1] == DEFAULT_SYMBOL) {
+            //System.out.println("IF = True");
+            field[player.getY()-1][player.getX()-1] = player.getSymbol();
+            Game.setWork(false);
         }
     }
 
     // Методы проверки победы
     public void checkWin(Player player){
         if(checkWinHorizontal(player) || checkWinVertical(player) || checkWinDiagonal(player)){
-            PlayerVsPlayer.win = true;
+            Game.setWin(true);
             System.out.println("Игрок " + player.getSymbol() + " победил!");
         }
     }

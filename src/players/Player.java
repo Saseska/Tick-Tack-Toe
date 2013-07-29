@@ -1,16 +1,13 @@
 package players;
 
-import game.GameField;
-
-import java.util.Scanner;
+import common.GameField;
 
 public class Player {
     private char symbol;
-    private Scanner scanner = new Scanner(System.in);
     private int x,y;
 
-    private boolean checkNum(int num, GameField field){
-        return (num <= field.getFieldLength());
+    public boolean checkNum(int num, GameField field){
+        return (num <= field.getFieldLength() && num > 0);
     }
 
     public Player(char c){
@@ -22,22 +19,23 @@ public class Player {
     }
 
     public int getX(){
-        return x-1; // - 1 т.к. нумерация в массиве начинается не с 1, а с 0.
+        return x; // - 1 т.к. нумерация в массиве начинается не с 1, а с 0.
+    }
+
+    public void setX(int x){
+        this.x = x;
     }
 
     public int getY(){
-        return y-1; // - 1 т.к. нумерация в массиве начинается не с 1, а с 0.
+        return y; // - 1 т.к. нумерация в массиве начинается не с 1, а с 0.
+    }
+
+    public void setY(int y){
+        this.y = y;
     }
 
     public void step(GameField gameField){
         System.out.println("Ход игрока " + symbol + ": ");
-        System.out.print("y- ");
-        y = scanner.nextInt();
-        if(!checkNum(y,gameField)) return;
-        System.out.print("x- ");
-        x =  scanner.nextInt();
-        if(!checkNum(x,gameField)) return;
-        gameField.setPoint(this);
-        gameField.checkWin(this);
+
     }
 }

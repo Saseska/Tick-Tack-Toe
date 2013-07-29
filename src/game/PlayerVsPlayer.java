@@ -1,47 +1,50 @@
 package game;
 
-import players.Player;
+import common.GameField;
+import players.Human;
 
 import java.util.Scanner;
 
-public class PlayerVsPlayer {
-    static boolean work;
-    static boolean win;
+public class PlayerVsPlayer extends Game{
+
+
     public static void game(){
         int steps;
         Scanner scanner = new Scanner(System.in);
 
-        Player playerO = new Player('O');
-        Player playerX = new Player('X');
+        Human playerO = new Human('O');
+        Human playerX = new Human('X');
 
         System.out.println("Введите размер игрового поля: ");
         GameField gameField = new GameField(scanner.nextInt());
         gameField.eraseField();
 
-        win = false;
+        setWin(false);
 
         for(steps = 0; steps < gameField.getMaxSteps(); ){
-            work = true;
+            setWork(true);
             gameField.viewPlane();
-            while (work){
+            System.out.println("Ход игрока " + playerX.getSymbol() + ": ");
+            while (getWork()){
                 playerX.step(gameField);
             }
             steps++;
 
             if(steps == gameField.getMaxSteps()) break;
-            if(win) break;
+            if(getWin()) break;
 
             gameField.viewPlane();
-            work = true;
-            while (work){
+            setWork(true);
+            System.out.println("Ход игрока " + playerO.getSymbol() + ": ");
+            while (getWork()){
                 playerO.step(gameField);
             }
             steps++;
 
-            if(win) break;
+            if(getWin()) break;
         }
 
-        if(!win && (steps == gameField.getMaxSteps())) System.out.println("Ничья");
+        if(!getWin() && (steps == gameField.getMaxSteps())) System.out.println("Ничья");
 
         gameField.viewPlane();
     }
