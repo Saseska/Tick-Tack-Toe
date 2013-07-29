@@ -5,20 +5,17 @@ import common.GameField;
 import java.util.Random;
 
 public class Computer extends Player{
+    private static final char COMPUTER = 'C';
 
     Random random = new Random();
 
     public Computer(char c){
-        super(c);
+        super(c, COMPUTER);
     }
 
     @Override
-    public void step(GameField gameField){
+    public void stepComputer(GameField gameField){
         setY(random.nextInt(gameField.getFieldLength()+1) + 1);
-        if(!checkNum(getY(),gameField)) return;
         setX(random.nextInt(gameField.getFieldLength()+1) + 1);
-        if(!checkNum(getX(),gameField)) return;
-        gameField.setPoint(this);
-        gameField.checkWin(this);
     }
 }

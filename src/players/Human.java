@@ -1,26 +1,21 @@
 package players;
 
-
 import common.GameField;
 
 import java.util.Scanner;
 
 public class Human extends Player{
+    private static final char HUMAN = 'H';
     private Scanner scanner = new Scanner(System.in);
 
     public Human(char c){
-        super(c);
+        super(c, HUMAN);
     }
 
-    @Override
-    public void step(GameField gameField){
+    public void stepHuman(GameField gameField){
         System.out.print("y- ");
         setY(scanner.nextInt());
-        if(!checkNum(getY(),gameField)) return;
         System.out.print("x- ");
         setX(scanner.nextInt());
-        if(!checkNum(getX(),gameField)) return;
-        gameField.setPoint(this);
-        gameField.checkWin(this);
     }
 }

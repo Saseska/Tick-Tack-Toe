@@ -56,9 +56,8 @@ public class GameField {
     }
 
     public void setPoint(Player player){
-        if(field[player.getY()-1][player.getX()-1] == DEFAULT_SYMBOL) {
-            //System.out.println("IF = True");
-            field[player.getY()-1][player.getX()-1] = player.getSymbol();
+        if(field[player.getY()][player.getX()] == DEFAULT_SYMBOL) {
+            field[player.getY()][player.getX()] = player.getSymbol();
             Game.setWork(false);
         }
     }
@@ -113,5 +112,4 @@ public class GameField {
 
         return false;
         }
-
 }
