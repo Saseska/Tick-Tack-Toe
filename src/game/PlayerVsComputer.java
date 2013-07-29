@@ -18,7 +18,6 @@ public class PlayerVsComputer extends Game{
         System.out.println("Введите размер игрового поля: ");
         GameField gameField = new GameField(scanner.nextInt());
         gameField.eraseField();
-        System.out.println("Поле создано и очищено!");
 
         setWin(false);
 
@@ -29,7 +28,6 @@ public class PlayerVsComputer extends Game{
             while (getWork()){
                 playerX.step(gameField);
             }
-            System.out.println("Игрок 1: ход выполнен");
             steps++;
 
             if(steps == gameField.getMaxSteps()) break;
