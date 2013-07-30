@@ -33,7 +33,7 @@ public class Player {
     }
 
     public boolean checkNum(int num, GameField field){
-        return (num <= field.getFieldLength() && num > 0);
+        return (num <= field.getFieldLength() && num >= GameField.RULER_MIN_VALUE);
     }
 
     public void step(GameField gameField){

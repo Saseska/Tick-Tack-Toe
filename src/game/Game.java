@@ -10,7 +10,7 @@ import java.util.Scanner;
 
 public class Game {
     private static boolean work;
-    private static boolean win;
+    private static boolean win = false;
 
     public Game(){
 
@@ -53,7 +53,7 @@ public class Game {
         GameField gameField = new GameField(scanner.nextInt());
         gameField.eraseField();
 
-        setWin(false);
+        //setWin(false);
 
         for(steps = 0; steps < gameField.getMaxSteps(); ){
             setWork(true);
