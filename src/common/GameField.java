@@ -7,6 +7,7 @@ public class GameField {
 
     private final static int DEFAULT_FIELD_SIZE = 3;
     private final static char DEFAULT_SYMBOL = ' ';
+    public final static int RULER_MIN_VALUE = 0;     //Мин. значение боковых линеек
 
     private int fieldSize = DEFAULT_FIELD_SIZE;
     private int numToWin = fieldSize;
@@ -41,13 +42,13 @@ public class GameField {
     public void viewPlane(){
         //Создание верхней линейки
         System.out.print(" | ");
-        for(int i = 1; i <= fieldSize; i++)
-            System.out.print(i + " | ");
+        for(int i = 0; i < fieldSize; i++)
+            System.out.print((i + RULER_MIN_VALUE) + " | ");  //i+RULE_MIN_VALUE, чтобы линейка начиналась не с 0, а с Мин. значения линейки
         System.out.println();
 
         //Вывод поля в консоль + боковая линейка
         for(int i = 0; i < field.length; i++){
-            System.out.print((i+1)  + "| "); //i+1 тк линейка начинается не с 0, а с 1.
+            System.out.print((i + RULER_MIN_VALUE)  + "| "); //i+RULE_MIN_VALUE, чтобы линейка начиналась не с 0, а с Мин. значения линейки
             for(int j = 0; j < field[i].length; j++){
                 System.out.print(field[i][j] + " | ");
             }

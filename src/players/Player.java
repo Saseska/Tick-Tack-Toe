@@ -25,11 +25,11 @@ public class Player {
     }
 
     public int getX(){
-        return x-1; // - 1 т.к. нумерация в массиве начинается не с 1, а с 0.
+        return x - GameField.RULER_MIN_VALUE;
     }
 
     public int getY(){
-        return y-1; // - 1 т.к. нумерация в массиве начинается не с 1, а с 0.
+        return y - GameField.RULER_MIN_VALUE;
     }
 
     public boolean checkNum(int num, GameField field){
