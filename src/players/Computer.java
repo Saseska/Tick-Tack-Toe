@@ -5,7 +5,6 @@ import common.GameField;
 import java.util.Random;
 
 public class Computer extends Player{
-    private static final int RANDOM_INCREASE = 1; //Для увеличения мин. значения random. Значение 0 для [0...X], 1 для [1...X]
     private static final char COMPUTER = 'C';
 
     Random random = new Random();
@@ -16,7 +15,12 @@ public class Computer extends Player{
 
     @Override
     public void stepComputer(GameField gameField){
-        setY(random.nextInt(gameField.getFieldLength()) + RANDOM_INCREASE);
-        setX(random.nextInt(gameField.getFieldLength()) + RANDOM_INCREASE);
+        setY(random.nextInt(gameField.getFieldLength()) + GameField.RULER_MIN_VALUE);
+        setX(random.nextInt(gameField.getFieldLength()) + GameField.RULER_MIN_VALUE);
     }
+
+    //AI
+   /* public void betterStepHorizontal(GameField gameField){
+
+    }*/
 }

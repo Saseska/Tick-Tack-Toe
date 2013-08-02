@@ -7,17 +7,24 @@ public class GameField {
 
     private final static int DEFAULT_FIELD_SIZE = 3;
     private final static char DEFAULT_SYMBOL = ' ';
-    public final static int RULER_MIN_VALUE = 0;     //Мин. значение боковых линеек
+    public final static int RULER_MIN_VALUE = 1;     //Мин. значение боковых линеек
 
     private int fieldSize = DEFAULT_FIELD_SIZE;
-    private int numToWin = fieldSize;
-    private int maxSteps = fieldSize * fieldSize;
+    private int numToWin;
+    private int maxSteps;
     private char[][] field;
+    private int historySteps = 0;
+    private int[] historyX;
+    private int[] historyY;
 
     public GameField(int size){
         if (size > 1) {
             fieldSize = size;
             field = new char[fieldSize][fieldSize];
+            numToWin = fieldSize;
+            maxSteps = fieldSize * fieldSize;
+            historyX = new int[maxSteps];
+            historyY = new int[maxSteps];
         } else {
             Main.newGame();
         }
@@ -56,17 +63,49 @@ public class GameField {
         }
     }
 
-    public void setPoint(Player player){
-        if(field[player.getY()][player.getX()] == DEFAULT_SYMBOL) {
-            field[player.getY()][player.getX()] = player.getSymbol();
-            Game.setWork(false);
+    public void setPoint(char symbol, int x, int y){
+        if(field[y][x] == DEFAULT_SYMBOL) {
+            field[y][x] = symbol;
+            Player.setWork(false);
         }
+    }
+
+    //Методы истории ходов
+    public void incHistory(){
+        historySteps++;
+    }
+
+    public void addStep(int x, int y){
+        historyX[historySteps] = x;
+        historyY[historySteps] = y;
+    }
+
+    public void erasePoint(int x, int y){
+            field[y][x] = DEFAULT_SYMBOL;
+    }
+
+    public void stepBack(){
+        historySteps--;
+        erasePoint(historyX[historySteps], historyY[historySteps]);
+        historySteps--;
+        erasePoint(historyX[historySteps], historyY[historySteps]);
+    }
+
+    public void getHistory(){
+        for (int i = 0; i<=historySteps; i++){
+            if((i % 2) == 0) System.out.print("Player X  "); else System.out.print("Player O  ");
+            System.out.println("X: " + historyX[i] + " Y: " + historyY[i]);
+        }
+    }
+
+    public int getHistorySteps(){
+        return historySteps;
     }
 
     // Методы проверки победы
     public void checkWin(Player player){
         if(checkWinHorizontal(player) || checkWinVertical(player) || checkWinDiagonal(player)){
-            Game.setWin(true);
+            Game.setWin();
             System.out.println("Игрок " + player.getSymbol() + " победил!");
         }
     }

@@ -1,13 +1,16 @@
-Tick-Tack-Toe
+Tick-Tack-Toe / Крестики нолики
 =============
 
-Project of game tick-tack-toe on java. Lessons on Hexlet.org
-Offline Player vs Player and Player vs Computer.
+Проект игры Крестики-Нолики. Hexlet.org
+
+Что есть:
+1. Игра: Человек vs Человек на одном компьютере
+2. Игра: Человек vs Компьютер (AI пока что работает на Random'е)
+3. Система истории: возврат хода в игре компьютером, вывод истории ходов после игры.
 
 TODO List:
-1. Add step history and step back.
-2. Improve AI
-3. Add game by Internet
-4. GUI
+1. Улучшить AI
+2. Добавить игру по интернету/lan
+3. Добавить GUI
 
-My e-mail: Grideron@gmail.com
+Мой e-mail: Grideron@gmail.com

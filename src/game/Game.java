@@ -9,31 +9,14 @@ import players.Player;
 import java.util.Scanner;
 
 public class Game {
-    private static boolean work;
     private static boolean win = false;
+    static String enterParams;
 
-    public Game(){
-
-    }
-
-    public static void setWork(Boolean bool){
-        work = bool;
-    }
-
-    public static void setWin(Boolean bool){
-        win = bool;
-    }
-
-    public static boolean getWork(){
-        return work;
-    }
-
-    public static boolean getWin(){
-        return win;
+    public static void setWin(){
+        win = true;
     }
 
     public static void startGame(String params){
-        int steps;
         Scanner scanner = new Scanner(System.in);
         Human playerX = new Human('X');
         Player playerO = null;
@@ -53,33 +36,42 @@ public class Game {
         GameField gameField = new GameField(scanner.nextInt());
         gameField.eraseField();
 
-        //setWin(false);
-
-        for(steps = 0; steps < gameField.getMaxSteps(); ){
-            setWork(true);
+        for(gameField.getHistorySteps(); gameField.getHistorySteps() < gameField.getMaxSteps(); ){
             gameField.viewPlane();
+
+            if(playerO.getPlayerType() == 'C' && gameField.getHistorySteps() > 1){
+                System.out.println("Хотите отменить ваш посл. ход? (y/n)");
+                enterParams = scanner.next();
+                if(enterParams.contentEquals("y")) gameField.stepBack();
+                gameField.viewPlane();
+            }
+
             System.out.println("Ход игрока " + playerX.getSymbol() + ": ");
-            while (getWork()){
-                playerX.step(gameField);
-            }
-            steps++;
+            playerX.step(gameField);
 
-            if(steps == gameField.getMaxSteps()) break;
-            if(getWin()) break;
+            if(gameField.getHistorySteps() == gameField.getMaxSteps()+1) break;
+            if(win) break;
 
             gameField.viewPlane();
-            setWork(true);
             System.out.println("Ход игрока " + playerO.getSymbol() + ": ");
-            while (getWork()){
-                playerO.step(gameField);
-            }
-            steps++;
+            playerO.step(gameField);
 
-            if(getWin()) break;
+            if(win) break;
         }
 
-        if(!getWin() && (steps == gameField.getMaxSteps())) System.out.println("Ничья");
+        if(!win && (gameField.getHistorySteps() == gameField.getMaxSteps()+1)) System.out.println("Ничья");
 
-        gameField.viewPlane();
+        System.out.println("Хотите увидеть историю ваших ходов? (y/n)");
+        enterParams = scanner.next();
+        if(enterParams.contentEquals("y")){
+                gameField.viewPlane();
+                System.out.println("История ходов.");
+                gameField.getHistory();
+        }
+
+        System.out.println("Начать новую игру? (y/n)");
+        enterParams = scanner.next();
+        if(enterParams.contentEquals("y")) Main.newGame();
+        else System.exit(0);
     }
 }

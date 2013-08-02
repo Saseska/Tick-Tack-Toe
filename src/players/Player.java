@@ -4,8 +4,9 @@ import common.GameField;
 
 public class Player {
     private char symbol;
-    private char playerType;
+    private char playerType = 'P';
     private int x,y;
+    private static boolean work;
 
     public Player(char c, char t){
         symbol = c;
@@ -24,29 +25,33 @@ public class Player {
         this.y = y;
     }
 
-    public int getX(){
-        return x - GameField.RULER_MIN_VALUE;
-    }
-
-    public int getY(){
-        return y - GameField.RULER_MIN_VALUE;
+    public char getPlayerType(){
+        return playerType;
     }
 
     public boolean checkNum(int num, GameField field){
         return (num <= field.getFieldLength() && num >= GameField.RULER_MIN_VALUE);
     }
 
-    public void step(GameField gameField){
+    public static void setWork(Boolean bool){
+        work = bool;
+    }
 
-        if(playerType == 'H'){
-            stepHuman(gameField);
+    public void step(GameField gameField){
+        work = true;
+        while (work){
+            if(playerType == 'H'){
+                stepHuman(gameField);
+            }
+            else if(playerType == 'C'){
+                stepComputer(gameField);
+            }
+            if(!checkNum(y,gameField)) return;
+            if(!checkNum(x,gameField)) return;
+            gameField.setPoint(this.getSymbol(), x - GameField.RULER_MIN_VALUE, y - GameField.RULER_MIN_VALUE);
         }
-        else if(playerType == 'C'){
-            stepComputer(gameField);
-        }
-        if(!checkNum(y,gameField)) return;
-        if(!checkNum(x,gameField)) return;
-        gameField.setPoint(this);
+        gameField.addStep(x - GameField.RULER_MIN_VALUE, y - GameField.RULER_MIN_VALUE);   //Добавить в память ходов
+        gameField.incHistory();
         gameField.checkWin(this);
     }
 
