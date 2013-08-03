@@ -9,14 +9,16 @@ import players.Player;
 import java.util.Scanner;
 
 public class Game {
-    private static boolean win = false;
-    static String enterParams;
+    private static boolean win;
+    private static String enterParams;
+    private static boolean enableStepBack;
 
     public static void setWin(){
         win = true;
     }
 
     public static void startGame(String params){
+        win = false;
         Scanner scanner = new Scanner(System.in);
         Human playerX = new Human('X');
         Player playerO = null;
@@ -35,11 +37,17 @@ public class Game {
         System.out.println("Введите размер игрового поля: ");
         GameField gameField = new GameField(scanner.nextInt());
         gameField.eraseField();
+        if(playerO.getPlayerType() == 'C'){
+            System.out.println("Включить отмену ходов? (y/n)");
+            enterParams = scanner.next();
+            enableStepBack = enterParams.contentEquals("y");
+
+        }
 
         for(gameField.getHistorySteps(); gameField.getHistorySteps() < gameField.getMaxSteps(); ){
             gameField.viewPlane();
 
-            if(playerO.getPlayerType() == 'C' && gameField.getHistorySteps() > 1){
+            if((playerO.getPlayerType() == 'C') && (gameField.getHistorySteps() > 1) && enableStepBack ){
                 System.out.println("Хотите отменить ваш посл. ход? (y/n)");
                 enterParams = scanner.next();
                 if(enterParams.contentEquals("y")) gameField.stepBack();
@@ -49,7 +57,7 @@ public class Game {
             System.out.println("Ход игрока " + playerX.getSymbol() + ": ");
             playerX.step(gameField);
 
-            if(gameField.getHistorySteps() == gameField.getMaxSteps()+1) break;
+            if(gameField.getHistorySteps() == gameField.getMaxSteps()) break;
             if(win) break;
 
             gameField.viewPlane();
@@ -59,7 +67,7 @@ public class Game {
             if(win) break;
         }
 
-        if(!win && (gameField.getHistorySteps() == gameField.getMaxSteps()+1)) System.out.println("Ничья");
+        if(!win && (gameField.getHistorySteps() == gameField.getMaxSteps())) System.out.println("Ничья");
 
         System.out.println("Хотите увидеть историю ваших ходов? (y/n)");
         enterParams = scanner.next();
@@ -74,4 +82,5 @@ public class Game {
         if(enterParams.contentEquals("y")) Main.newGame();
         else System.exit(0);
     }
+
 }

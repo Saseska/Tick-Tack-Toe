@@ -6,7 +6,7 @@ import players.Player;
 public class GameField {
 
     private final static int DEFAULT_FIELD_SIZE = 3;
-    private final static char DEFAULT_SYMBOL = ' ';
+    public final static char DEFAULT_SYMBOL = ' ';
     public final static int RULER_MIN_VALUE = 1;     //Мин. значение боковых линеек
 
     private int fieldSize = DEFAULT_FIELD_SIZE;
@@ -68,6 +68,10 @@ public class GameField {
             field[y][x] = symbol;
             Player.setWork(false);
         }
+    }
+
+    public char getPoint(int row, int col){
+        return field[row][col];
     }
 
     //Методы истории ходов
@@ -151,5 +155,5 @@ public class GameField {
         }
 
         return false;
-        }
+    }
 }
