@@ -1,6 +1,5 @@
 package common;
 
-import game.Game;
 import players.Player;
 
 public class GameField {
@@ -10,24 +9,28 @@ public class GameField {
     public final static int RULER_MIN_VALUE = 1;     //Мин. значение боковых линеек
 
     private int fieldSize = DEFAULT_FIELD_SIZE;
-    private int numToWin;
+    private static int numToWin;
     private int maxSteps;
     private char[][] field;
     private int historySteps = 0;
     private int[] historyX;
     private int[] historyY;
 
-    public GameField(int size){
+    public GameField(int size, int numToWin){
         if (size > 1) {
             fieldSize = size;
             field = new char[fieldSize][fieldSize];
-            numToWin = fieldSize;
+            this.numToWin = numToWin;
             maxSteps = fieldSize * fieldSize;
             historyX = new int[maxSteps];
             historyY = new int[maxSteps];
         } else {
             Main.newGame();
         }
+    }
+
+    public int getNumToWin(){
+        return numToWin;
     }
 
     public int getFieldLength(){
@@ -46,21 +49,23 @@ public class GameField {
         }
     }
 
-    public void viewPlane(){
+    public StringBuilder viewPlane(){
+        StringBuilder plane = new StringBuilder();
         //Создание верхней линейки
-        System.out.print(" | ");
+        plane.append(" | ");
         for(int i = 0; i < fieldSize; i++)
-            System.out.print((i + RULER_MIN_VALUE) + " | ");  //i+RULE_MIN_VALUE, чтобы линейка начиналась не с 0, а с Мин. значения линейки
-        System.out.println();
+            plane.append((i + RULER_MIN_VALUE) + " | ");  //i+RULE_MIN_VALUE, чтобы линейка начиналась не с 0, а с Мин. значения линейки
+        plane.append("\n");
 
         //Вывод поля в консоль + боковая линейка
         for(int i = 0; i < field.length; i++){
-            System.out.print((i + RULER_MIN_VALUE)  + "| "); //i+RULE_MIN_VALUE, чтобы линейка начиналась не с 0, а с Мин. значения линейки
+            plane.append((i + RULER_MIN_VALUE)  + "| "); //i+RULE_MIN_VALUE, чтобы линейка начиналась не с 0, а с Мин. значения линейки
             for(int j = 0; j < field[i].length; j++){
-                System.out.print(field[i][j] + " | ");
+                plane.append(field[i][j] + " | ");
             }
-            System.out.println();
+            plane.append("\n");
         }
+        return plane;
     }
 
     public void setPoint(char symbol, int x, int y){
@@ -107,11 +112,12 @@ public class GameField {
     }
 
     // Методы проверки победы
-    public void checkWin(Player player){
+    public boolean checkWin(Player player){
         if(checkWinHorizontal(player) || checkWinVertical(player) || checkWinDiagonal(player)){
-            Game.setWin();
             System.out.println("Игрок " + player.getSymbol() + " победил!");
+            return true;
         }
+        return false;
     }
 
     private boolean checkWinHorizontal(Player player){

@@ -1,7 +1,5 @@
 package players;
 
-import common.GameField;
-
 import java.util.Scanner;
 
 public class Human extends Player{
@@ -12,7 +10,8 @@ public class Human extends Player{
         super(c, HUMAN);
     }
 
-    public void stepHuman(GameField gameField){
+    @Override
+    public void stepHuman(){
         System.out.print("y- ");
         setY(scanner.nextInt());
         System.out.print("x- ");

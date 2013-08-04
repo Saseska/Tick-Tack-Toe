@@ -1,6 +1,7 @@
 package common;
 
 import game.Game;
+import game.GameInternet;
 
 import java.util.Scanner;
 
@@ -13,11 +14,13 @@ public class Main {
 
     public static void newGame(){
         Scanner scanner = new Scanner(System.in);
-
-        System.out.println("Для начала игры введите тип игры:");
-        System.out.println("Player vs Player - pvp");
-        System.out.println("Player vs Computer - pvc");
-        Game.startGame(scanner.nextLine());
+        String params;
+        StringBuilder newGameString = new StringBuilder();
+        newGameString.append( "Для начала игры введите тип игры: \n" + "Player vs Player - pvp \n" + "Player vs InternetPlayer - pvi \n" + "Player vs Computer - pvc");
+        System.out.println(newGameString);
+        params = scanner.nextLine();
+        if(params.contentEquals("pvi")) GameInternet.startGame();
+        else Game.startGame(params);
+        System.exit(0);
     }
-
 }

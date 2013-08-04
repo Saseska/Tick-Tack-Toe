@@ -41,10 +41,13 @@ public class Player {
         work = true;
         while (work){
             if(playerType == 'H'){
-                stepHuman(gameField);
+                stepHuman();
             }
             else if(playerType == 'C'){
                 stepComputer(gameField);
+            }
+            else if(playerType == 'I'){
+                stepInternetPlayer();
             }
             if(!checkNum(y,gameField)) return;
             if(!checkNum(x,gameField)) return;
@@ -52,9 +55,9 @@ public class Player {
         }
         gameField.addStep(x - GameField.RULER_MIN_VALUE, y - GameField.RULER_MIN_VALUE);   //Добавить в память ходов
         gameField.incHistory();
-        gameField.checkWin(this);
     }
 
-    public void stepHuman(GameField gameField){}
+    public void stepHuman(){}
     public void stepComputer(GameField gameField){}
+    public void stepInternetPlayer(){}
 }

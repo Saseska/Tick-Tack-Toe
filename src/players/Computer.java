@@ -31,7 +31,7 @@ public class Computer extends Player{
             numSymb = 0;
             for (int col = 0; col < gameField.getFieldLength(); col++){
                 if(gameField.getPoint(row, col) == 'X') numSymb++;
-                if(numSymb == 2){
+                if(numSymb == (gameField.getNumToWin()-1)){
                     bestRow = row;
                 }
             }
@@ -60,7 +60,7 @@ public class Computer extends Player{
             numSymb = 0;
             for (int row = 0; row < gameField.getFieldLength(); row++){
                 if(gameField.getPoint(row, col) == 'X') numSymb++;
-                if(numSymb == 2){
+                if(numSymb == (gameField.getNumToWin()-1)){
                     bestCol = col;
 
                 }
@@ -87,7 +87,7 @@ public class Computer extends Player{
         int numSymb = 0;
         for(int i = 0; i < gameField.getFieldLength(); i++){
             if(gameField.getPoint(i,i) == 'X') numSymb++;
-            if (numSymb == 2){
+            if (numSymb == (gameField.getNumToWin()-1)){
                 for(int j = 0; j < gameField.getFieldLength(); j++){
                     if(gameField.getPoint(j,j) == GameField.DEFAULT_SYMBOL){
                         haveBest = true;
@@ -104,7 +104,7 @@ public class Computer extends Player{
         for(int row = gameField.getFieldLength() - 1; row >= 0; row--){
             if(gameField.getPoint(row, col) == 'X') numSymb++;
             col++;
-            if (numSymb == 2){
+            if (numSymb == (gameField.getNumToWin()-1)){
                 int col2=0;
                 for(int row2 = gameField.getFieldLength() - 1; row2 >= 0; row2--){
                     if(gameField.getPoint(row2, col2) == GameField.DEFAULT_SYMBOL){
