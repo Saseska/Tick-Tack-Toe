@@ -34,7 +34,7 @@ public class Game {
         if(enterParams.contentEquals("y")){
             System.out.println(gameField.viewPlane());
             System.out.println("История ходов.");
-            gameField.getHistory();
+            System.out.println(gameField.getHistory());
         }
 
         System.out.println("Начать новую игру? (y/n)");

@@ -15,6 +15,8 @@ public class Computer extends Player{
 
     @Override
     public void stepComputer(GameField gameField){
+        System.out.println("\n Ход компьютера: ");
+
         if(!betterStepHorizontal(gameField) && !betterStepVertical(gameField) && !betterStepDiagonal(gameField)){
             setY(random.nextInt(gameField.getFieldLength()) + GameField.RULER_MIN_VALUE);
             setX(random.nextInt(gameField.getFieldLength()) + GameField.RULER_MIN_VALUE);

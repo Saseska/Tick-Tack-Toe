@@ -2,6 +2,8 @@ package players;
 
 import common.GameField;
 
+import java.io.IOException;
+
 public class Player {
     private char symbol;
     private char playerType = 'P';
@@ -37,17 +39,25 @@ public class Player {
         work = bool;
     }
 
+    public static boolean getWork(){
+        return work;
+    }
+
     public void step(GameField gameField){
         work = true;
         while (work){
             if(playerType == 'H'){
-                stepHuman();
+                stepHuman(gameField);
             }
             else if(playerType == 'C'){
                 stepComputer(gameField);
             }
             else if(playerType == 'I'){
-                stepInternetPlayer();
+                try {
+                    stepInternetPlayer();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
             if(!checkNum(y,gameField)) return;
             if(!checkNum(x,gameField)) return;
@@ -57,7 +67,7 @@ public class Player {
         gameField.incHistory();
     }
 
-    public void stepHuman(){}
+    public void stepHuman(GameField gameField){}
     public void stepComputer(GameField gameField){}
-    public void stepInternetPlayer(){}
+    public void stepInternetPlayer() throws IOException {}
 }

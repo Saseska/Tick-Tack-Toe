@@ -100,11 +100,13 @@ public class GameField {
         erasePoint(historyX[historySteps], historyY[historySteps]);
     }
 
-    public void getHistory(){
+    public StringBuilder getHistory(){
+        StringBuilder line = new StringBuilder();
         for (int i = 0; i<=historySteps; i++){
-            if((i % 2) == 0) System.out.print("Player X  "); else System.out.print("Player O  ");
-            System.out.println("X: " + historyX[i] + " Y: " + historyY[i]);
+            if((i % 2) == 0) line.append("Player X  "); else line.append("Player O  ");
+            line.append("X: " + historyX[i] + " Y: " + historyY[i]);
         }
+        return line;
     }
 
     public int getHistorySteps(){

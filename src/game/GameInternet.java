@@ -11,6 +11,8 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Scanner;
 
+import static java.lang.System.*;
+
 public class GameInternet extends Game{
     private static boolean win;
     private static String enterParams;
@@ -19,34 +21,33 @@ public class GameInternet extends Game{
 
     public static void startGame(){
         win = false;
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Создать игровой сервер? (y/n)");
+        Scanner scanner = new Scanner(in);
+        out.println("Создать игровой сервер? (y/n)");
         enterParams = scanner.next();
-        if(enterParams.contentEquals("y")) gameServer(scanner);
+        if(enterParams.contentEquals("y") || enterParams.contentEquals("н")) gameServer(scanner);
         else gameClient(scanner);
 
-        System.out.println("Игра завершена.");
-        System.out.println("Начать новую игру? (y/n)");
+        out.println("Игра завершена.");
+        out.println("Начать новую игру? (y/n)");
         enterParams = scanner.next();
-        if(enterParams.contentEquals("y")) Main.newGame();
-        else System.exit(0);
+        if(enterParams.contentEquals("y") || enterParams.contentEquals("н")) Main.newGame();
+        else exit(0);
     }
 
     private static void gameServer(Scanner scanner){
         try {
             ServerSocket ss = new ServerSocket(serverPort); // создаем сокет сервера и привязываем его к вышеуказанному порту
 
-            System.out.println("Сервер для игры Крестики-Нолики");
+            out.println("Сервер для игры Крестики-Нолики");
 
             GameField gameField = newGameField(scanner);
 
-            System.out.println("Ожидание игроков...");
             Human playerX = new Human('X');
-            System.out.println("Вы игрок " + playerX.getSymbol() + ". Ожидание второго игрокa...");
+            out.println("Вы игрок " + playerX.getSymbol() + ". Ожидание второго игрокa...");
 
             Socket socketPlayer = ss.accept();
-            System.out.println("Player O подключился");
-            System.out.println();
+            out.println("Player O подключился");
+            out.println();
             InternetPlayer playerO = new InternetPlayer('O');
             // Берем входной и выходной потоки сокета игрока O
             InputStream sin = socketPlayer.getInputStream();
@@ -54,13 +55,11 @@ public class GameInternet extends Game{
             // Конвертируем потоки в другой тип
             DataInputStream in = new DataInputStream(sin);
             DataOutputStream out = new DataOutputStream(sout);
+            playerO.setInOutStreams(in, out);
 
-            int clientStepX, clientStepY;
-
+            out.writeInt(gameField.getMaxSteps());
             out.writeUTF("Вы игрок " + playerO.getSymbol() + ".");
-            out.flush();
 
-            System.out.println(gameField.viewPlane());
             for(gameField.getHistorySteps(); gameField.getHistorySteps() < gameField.getMaxSteps(); ){
 
                 System.out.println("Ваш ход:");
@@ -73,10 +72,8 @@ public class GameInternet extends Game{
                 if(gameField.getHistorySteps() == gameField.getMaxSteps()) break;
 
                 System.out.println("Ожидание хода игрока O...");
-                clientStepX = in.readInt();
-                clientStepY = in.readInt();
-                playerO.setXY(clientStepX, clientStepY);
                 playerO.step(gameField);
+                out.writeBoolean(playerO.getWork());
                 win = gameField.checkWin(playerO);
                 out.writeBoolean(win);
                 System.out.println("Ход игрока O: ");
@@ -85,6 +82,8 @@ public class GameInternet extends Game{
 
                 if(win) break;
             }
+            out.writeUTF(gameField.getHistory().toString());
+            out.flush();
             endGame(gameField, scanner, win);
         } catch(Exception x) { //x.printStackTrace();
         }
@@ -92,17 +91,17 @@ public class GameInternet extends Game{
 
 
     private static void gameClient(Scanner scanner){
-        System.out.println("Введите ip сервера для подключения или введите b для возврата в меню");
+        out.println("Введите ip сервера для подключения или введите b для возврата в меню");
         enterParams = scanner.next();
         if(enterParams.contentEquals("b"))  Main.newGame();
         serverIP = enterParams;
 
         try {
             InetAddress ipAddress = InetAddress.getByName(serverIP); // создаем объект который отображает вышеописанный IP-адрес.
-            //System.out.println("Подключение к компьютеру с IP: " + serverIP + " и портом: " + serverPort);
+            out.println("Подключение к компьютеру с IP: " + serverIP + " и портом: " + serverPort);
             Socket socket = new Socket(ipAddress, serverPort); // создаем сокет используя IP-адрес и порт сервера.
-            System.out.println("Соединение установлено");
-            System.out.println();
+            out.println("Соединение установлено");
+            out.println();
 
             // Берем входной и выходной потоки сокета
             InputStream sin = socket.getInputStream();
@@ -111,33 +110,50 @@ public class GameInternet extends Game{
             DataInputStream in = new DataInputStream(sin);
             DataOutputStream out = new DataOutputStream(sout);
 
-            int x,y;
             win = false;
+            boolean work;
+            int maxSteps;
             String field = " ";
             String historySteps;
 
+            maxSteps = in.readInt();
             System.out.println(in.readUTF());
             System.out.println();
 
-            while (!win) {
+            for(int steps = 0; steps < maxSteps; ){
+
                 System.out.println("Ожидание хода игрока X...");
                 System.out.println("Ход игрока X: \n" + (field = in.readUTF()));
 
+                steps++;
                 win = in.readBoolean();
+
+                if(!win && (steps == maxSteps)){
+                    System.out.println("Ничья");
+                    break;
+                }
                 if(win){
                     System.out.println("Игрок X победил!");
                     break;
                 }
 
                 System.out.println("Ваш ход: ");
-                System.out.print("y- ");
-                y = scanner.nextInt();
-                System.out.print("x- ");
-                x = scanner.nextInt();
-                out.writeInt(x);
-                out.writeInt(y);
+                work = in.readBoolean();
+                while (work){
+                    System.out.print("y- ");
+                    out.writeInt(scanner.nextInt());
+                    System.out.print("x- ");
+                    out.writeInt(scanner.nextInt());
+                    work = in.readBoolean();
+                }
+                steps++;
                 win = in.readBoolean();
                 field = in.readUTF();
+
+                if(!win && (steps == maxSteps)){
+                    System.out.println("Ничья");
+                    break;
+                }
 
                 if(win){
                     System.out.println("Вы победили!");
@@ -148,12 +164,11 @@ public class GameInternet extends Game{
             historySteps = in.readUTF();
             System.out.println("Хотите увидеть историю ваших ходов? (y/n)");
             enterParams = scanner.next();
-            if(enterParams.contentEquals("y")){
+            if(enterParams.contentEquals("y") || enterParams.contentEquals("н")){
                 System.out.println(field);
                 System.out.println("История ходов.");
                 System.out.println(historySteps);
             }
-
         } catch (Exception x) {
             //x.printStackTrace();
         }

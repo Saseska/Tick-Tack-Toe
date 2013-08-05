@@ -1,5 +1,7 @@
 package players;
 
+import common.GameField;
+
 import java.util.Scanner;
 
 public class Human extends Player{
@@ -11,7 +13,10 @@ public class Human extends Player{
     }
 
     @Override
-    public void stepHuman(){
+    public void stepHuman(GameField gameField){
+        System.out.println(gameField.viewPlane());
+        System.out.println("Ход игрока " + getSymbol() + ": ");
+
         System.out.print("y- ");
         setY(scanner.nextInt());
         System.out.print("x- ");

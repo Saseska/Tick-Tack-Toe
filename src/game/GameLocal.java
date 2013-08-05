@@ -35,28 +35,28 @@ public class GameLocal extends Game{
         if(playerO.getPlayerType() == 'C'){
             System.out.println("Включить отмену ходов? (y/n)");
             enterParams = scanner.next();
-            enableStepBack = enterParams.contentEquals("y");
+            if(enterParams.contentEquals("y") || enterParams.contentEquals("н")) {
+                enableStepBack = true;
+            }
         }
 
         for(gameField.getHistorySteps(); gameField.getHistorySteps() < gameField.getMaxSteps(); ){
-            System.out.println(gameField.viewPlane());
 
             if((playerO.getPlayerType() == 'C') && (gameField.getHistorySteps() > 1) && enableStepBack ){
                 System.out.println("Хотите отменить ваш посл. ход? (y/n)");
                 enterParams = scanner.next();
-                if(enterParams.contentEquals("y")) gameField.stepBack();
+                if(enterParams.contentEquals("y") || enterParams.contentEquals("н")) {
+                    gameField.stepBack();
+                }
                 System.out.println(gameField.viewPlane());
             }
 
-            System.out.println("Ход игрока " + playerX.getSymbol() + ": ");
             playerX.step(gameField);
             win = gameField.checkWin(playerX);
 
             if(gameField.getHistorySteps() == gameField.getMaxSteps()) break;
             if(win) break;
 
-            System.out.println(gameField.viewPlane());
-            System.out.println("Ход игрока " + playerO.getSymbol() + ": ");
             playerO.step(gameField);
             win = gameField.checkWin(playerO);
 
