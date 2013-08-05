@@ -1,6 +1,6 @@
 package common;
 
-import game.Game;
+import game.GameLocal;
 import game.GameInternet;
 
 import java.util.Scanner;
@@ -20,7 +20,7 @@ public class Main {
         System.out.println(newGameString);
         params = scanner.nextLine();
         if(params.contentEquals("pvi")) GameInternet.startGame();
-        else Game.startGame(params);
+        else GameLocal.startGame(params);
         System.exit(0);
     }
 }

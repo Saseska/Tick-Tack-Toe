@@ -11,7 +11,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Scanner;
 
-public class GameInternet {
+public class GameInternet extends Game{
     private static boolean win;
     private static String enterParams;
     private static String serverIP;
@@ -38,20 +38,7 @@ public class GameInternet {
 
             System.out.println("Сервер для игры Крестики-Нолики");
 
-            GameField gameField = null;
-
-            System.out.println("Введите размер игрового поля: ");
-            int size = scanner.nextInt();
-            if(size > 3){
-                System.out.println("Введите длину линии для победы: ");
-                int numToWin = scanner.nextInt();
-                if(numToWin < 3) {
-                    gameField = new GameField(size, 3);
-                }
-            } else {
-                gameField = new GameField(3, 3);
-            }
-            gameField.eraseField();
+            GameField gameField = newGameField(scanner);
 
             System.out.println("Ожидание игроков...");
             Human playerX = new Human('X');
@@ -68,32 +55,37 @@ public class GameInternet {
             DataInputStream in = new DataInputStream(sin);
             DataOutputStream out = new DataOutputStream(sout);
 
+            int clientStepX, clientStepY;
+
             out.writeUTF("Вы игрок " + playerO.getSymbol() + ".");
             out.flush();
 
-            int clientX, clientY;
-
+            System.out.println(gameField.viewPlane());
             for(gameField.getHistorySteps(); gameField.getHistorySteps() < gameField.getMaxSteps(); ){
 
-                System.out.println(gameField.viewPlane());
                 System.out.println("Ваш ход:");
                 playerX.step(gameField);
                 win = gameField.checkWin(playerX);
                 out.writeUTF(gameField.viewPlane().toString());
-                out.flush();
+                out.writeBoolean(win);
                 if(win) break;
 
                 if(gameField.getHistorySteps() == gameField.getMaxSteps()) break;
+
                 System.out.println("Ожидание хода игрока O...");
-                out.writeBoolean(true);
-                clientX = in.readInt();
-                clientY = in.readInt();
-                playerO.setXY(clientX, clientY);
+                clientStepX = in.readInt();
+                clientStepY = in.readInt();
+                playerO.setXY(clientStepX, clientStepY);
                 playerO.step(gameField);
                 win = gameField.checkWin(playerO);
+                out.writeBoolean(win);
                 System.out.println("Ход игрока O: ");
+                out.writeUTF(gameField.viewPlane().toString());
+                System.out.println(gameField.viewPlane());
+
                 if(win) break;
             }
+            endGame(gameField, scanner, win);
         } catch(Exception x) { //x.printStackTrace();
         }
     }
@@ -107,43 +99,61 @@ public class GameInternet {
 
         try {
             InetAddress ipAddress = InetAddress.getByName(serverIP); // создаем объект который отображает вышеописанный IP-адрес.
-            System.out.println("Подключение к компьютеру с IP: " + serverIP + " и портом: " + serverPort);
+            //System.out.println("Подключение к компьютеру с IP: " + serverIP + " и портом: " + serverPort);
             Socket socket = new Socket(ipAddress, serverPort); // создаем сокет используя IP-адрес и порт сервера.
             System.out.println("Соединение установлено");
             System.out.println();
 
-            // Берем входной и выходной потоки сокета, теперь можем получать и отсылать данные клиентом.
+            // Берем входной и выходной потоки сокета
             InputStream sin = socket.getInputStream();
             OutputStream sout = socket.getOutputStream();
-
-            // Конвертируем потоки в другой тип, чтоб легче обрабатывать текстовые сообщения.
+            // Конвертируем потоки в другой тип
             DataInputStream in = new DataInputStream(sin);
             DataOutputStream out = new DataOutputStream(sout);
 
-            boolean canStep = false;
             int x,y;
+            win = false;
+            String field = " ";
+            String historySteps;
 
             System.out.println(in.readUTF());
             System.out.println();
 
             while (!win) {
                 System.out.println("Ожидание хода игрока X...");
-                System.out.println("Ход игрока X: \n" + in.readUTF());
+                System.out.println("Ход игрока X: \n" + (field = in.readUTF()));
 
-                if(win) break;
-                canStep = in.readBoolean();
-                if(canStep) {
-                    System.out.println("Ваш ход: ");
-                    System.out.print("y- ");
-                    y = scanner.nextInt();
-                    System.out.print("x- ");
-                    x = scanner.nextInt();
-                    out.writeInt(x);
-                    out.writeInt(y);
-                    out.flush();
-                    canStep = false;
+                win = in.readBoolean();
+                if(win){
+                    System.out.println("Игрок X победил!");
+                    break;
+                }
+
+                System.out.println("Ваш ход: ");
+                System.out.print("y- ");
+                y = scanner.nextInt();
+                System.out.print("x- ");
+                x = scanner.nextInt();
+                out.writeInt(x);
+                out.writeInt(y);
+                win = in.readBoolean();
+                field = in.readUTF();
+
+                if(win){
+                    System.out.println("Вы победили!");
+                    break;
                 }
             }
+
+            historySteps = in.readUTF();
+            System.out.println("Хотите увидеть историю ваших ходов? (y/n)");
+            enterParams = scanner.next();
+            if(enterParams.contentEquals("y")){
+                System.out.println(field);
+                System.out.println("История ходов.");
+                System.out.println(historySteps);
+            }
+
         } catch (Exception x) {
             //x.printStackTrace();
         }
